@@ -6,8 +6,14 @@ import genresRouter from './api/genres';
 import bodyParser from 'body-parser';
 import {loadUsers} from './seedData';
 import usersRouter from './api/users';
+import session from 'express-session';
+import authenticate from './authenticate';
 
 dotenv.config();
+
+if (process.env.SEED_DB) {
+  loadUsers();
+}
 
 const errHandler = (err, req, res, next) => {
   /* if the error in development then send stack trace to display whole error,
@@ -18,23 +24,25 @@ const errHandler = (err, req, res, next) => {
   res.status(500).send(`Hey!! You caught the error 👍👍, ${err.stack} `);
 };
 
-if (process.env.SEED_DB) {
-  loadUsers();
-}
-
 const app = express();
 
 const port = process.env.PORT;
-
-app.use(express.static('public'));
 
 //configure body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
-app.use('/api/movies', moviesRouter);
+app.use(session({
+  secret: 'ilikecake',
+  resave: true,
+  saveUninitialized: true
+}));
+
+app.use(express.static('public'));
+
 app.use('/api/users', usersRouter);
 app.use('/api/genres', genresRouter);
+app.use('/api/movies', authenticate, moviesRouter);
 app.use(errHandler);
 
 
