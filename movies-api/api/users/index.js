@@ -32,7 +32,7 @@ router.post('/:userName/favourites', (req, res, next) => {
         user => {
           (user.favourites)?user.favourites.push(newFavourite):user.favourites =[newFavourite];
           User.findOneAndUpdate(query, {favourites:user.favourites}, {
-            new: true
+            new: true, runValidators: true
           }).then(user => res.status(201).send(user));
         }
       ).catch(next);
