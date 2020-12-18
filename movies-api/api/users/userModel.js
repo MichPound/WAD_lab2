@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt-nodejs';
 const Schema = mongoose.Schema;
 
 const MovieSchema = new Schema({
-    id: {type: Number, required: true },
+    id: {type: Number, unique:false, required: true },
     title: {type: String, required: true }
   });
   

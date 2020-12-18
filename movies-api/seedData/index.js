@@ -15,7 +15,7 @@ const users = [
 export async function loadUsers() {
   console.log('load user Data');
     try {
-      await userModel.deleteMany();
+      await userModel.deleteMany({});
       await users.forEach(user => userModel.create(user));
       console.info(`${users.length} users were successfully stored.`);
     } catch (err) {
